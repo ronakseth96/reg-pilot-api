@@ -1,0 +1,39 @@
+
+reg-poc-server/images/server.dockerfile
+xrekva1kdf67jk38l9hbkp1vp
+
+Status
+
+Completed
+
+Duration
+
+23.6s
+Builder
+
+desktop-linux
+Author
+
+N/A
+Requirement already satisfied: PrettyTable>=3.5.0 in /keripy/venv/lib/python3.12/site-packages (from keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (3.10.0)
+Requirement already satisfied: cryptography>=39.0.2 in /keripy/venv/lib/python3.12/site-packages (from keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (42.0.5)
+Collecting charset-normalizer<4,>=2 (from requests>=2.31.0->reg-pilot-server==0.0.2->-r requirements.txt (line 10))
+Downloading charset_normalizer-3.3.2-cp312-cp312-musllinux_1_1_x86_64.whl.metadata (33 kB)
+Collecting idna<4,>=2.5 (from requests>=2.31.0->reg-pilot-server==0.0.2->-r requirements.txt (line 10))
+Downloading idna-3.7-py3-none-any.whl.metadata (9.9 kB)
+Collecting urllib3<3,>=1.21.1 (from requests>=2.31.0->reg-pilot-server==0.0.2->-r requirements.txt (line 10))
+Downloading urllib3-2.2.1-py3-none-any.whl.metadata (6.4 kB)
+Collecting certifi>=2017.4.17 (from requests>=2.31.0->reg-pilot-server==0.0.2->-r requirements.txt (line 10))
+Downloading certifi-2024.2.2-py3-none-any.whl.metadata (2.2 kB)
+Collecting jinja2>=2.0 (from swagger-ui-py>=22.7.13->reg-pilot-server==0.0.2->-r requirements.txt (line 10))
+Downloading jinja2-3.1.4-py3-none-any.whl.metadata (2.6 kB)
+Requirement already satisfied: cffi>=1.12 in /keripy/venv/lib/python3.12/site-packages (from cryptography>=39.0.2->keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (1.16.0)
+Collecting MarkupSafe>=2.0 (from jinja2>=2.0->swagger-ui-py>=22.7.13->reg-pilot-server==0.0.2->-r requirements.txt (line 10))
+Downloading MarkupSafe-2.1.5-cp312-cp312-musllinux_1_1_x86_64.whl.metadata (3.0 kB)
+Requirement already satisfied: attrs>=22.2.0 in /keripy/venv/lib/python3.12/site-packages (from jsonschema>=4.17.0->keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (23.2.0)
+Requirement already satisfied: jsonschema-specifications>=2023.03.6 in /keripy/venv/lib/python3.12/site-packages (from jsonschema>=4.17.0->keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (2023.12.1)
+Requirement already satisfied: referencing>=0.28.4 in /keripy/venv/lib/python3.12/site-packages (from jsonschema>=4.17.0->keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (0.34.0)
+Requirement already satisfied: rpds-py>=0.7.1 in /keripy/venv/lib/python3.12/site-packages (from jsonschema>=4.17.0->keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (0.18.0)
+Requirement already satisfied: wcwidth in /keripy/venv/lib/python3.12/site-packages (from PrettyTable>=3.5.0->keri>=1.1.11->reg-pilot-server==0.0.2->-r requirements.txt (line 10)) (0.2.13)
+Collecting mypy-extensions>=0.3.0 (from typing-inspect<1,>=0.4.0->dataclasses-json>=0.5.7->reg-pilot-server==0.0.2->-r requirements.txt (line 10))
+

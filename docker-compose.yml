@@ -1,0 +1,65 @@
+services:
+
+  reg-server:
+    build:
+      context: .
+      dockerfile: ./images/server.dockerfile
+    image: 2byrds/reg-server:latest
+    ports:
+      - 8000:8000
+    # command: gunicorn regps.app.service:app -b 0.0.0.0:8000
+    volumes:
+      - ./:/usr/src/app/regps
+    environment:
+      - ENABLE_CORS=true
+      - VERIFIER_AUTHORIZATIONS=http://host.docker.internal:7676/authorizations/
+      - VERIFIER_PRESENTATIONS=http://host.docker.internal:7676/presentations/
+      - VERIFIER_REPORTS=http://host.docker.internal:7676/reports/
+    healthcheck:
+      test:
+          - CMD
+          - curl
+          - -f
+          - http://localhost:8000/api/doc#
+      interval: 2s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+    # depends_on:
+      # - verifier
+
+  # vlei-verifier:
+  #   build:
+  #     context: .
+  #     dockerfile: ./images/verifier.dockerfile
+  #   image: 2byrds/vlei-verifier:latest
+  #   container_name: vlei-verifier
+  #   hostname: vlei-verifier
+  #   # depends_on:
+  #   #   - vlei
+  #   #   - witnesses
+  #   ports:
+  #     - 7676:7676
+  #   healthcheck:
+  #     test:
+  #         - CMD
+  #         - curl
+  #         - -f
+  #         - http://localhost:7676/health
+  #     interval: 2s
+  #     timeout: 3s
+  #     retries: 5
+  #     start_period: 2s
+
+  deps:
+    image: alpine
+    command: ['echo', 'Dependencies running']
+    depends_on:
+        reg-server:
+            condition: service_healthy
+        # vlei-server:
+        #     condition: service_healthy
+        # vlei-verifier:
+        #     condition: service_healthy
+        # witness-demo:
+        #     condition: service_healthy
