@@ -269,7 +269,7 @@ class StatusTask:
                 if len(responses) == 0:
                     print(f"StatusTask.on_get: Empty upload status list for aid {aid}")
                     resp.status = falcon.HTTP_200
-                    resp.data = json.dumps(dict(msg="No uploads found")).encode("utf-8")
+                    resp.data = json.dumps([dict(msg="No uploads found")]).encode("utf-8")
                     return resp
                 else:
                     print(f"StatusTask.on_get: received data {json.dumps(resp.data)}")
