@@ -1,0 +1,45 @@
+# The manifest for the "reg-pilot-api" service.
+
+# Your service name will be used in naming your resources like log groups, ECS services, etc.
+name: reg-pilot-api
+type: Load Balanced Web Service
+
+# Distribute traffic to your service.
+http:
+  path: '/'
+  healthcheck:
+    path: /api/doc#
+    healthy_threshold: 5
+    unhealthy_threshold: 2
+    interval: 5s
+    timeout: 3s
+
+# Configuration for your containers and service.
+image:
+  # Docker build arguments. For additional overrides: https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#image-build
+   build:
+     context: .
+     dockerfile: images/reg-pilot-api.dockerfile
+   port: 8000
+
+cpu: 256       # Number of CPU units for the task.
+memory: 512    # Amount of memory in MiB used by the task.
+platform: linux/amd64  # See https://aws.github.io/copilot-cli/docs/manifest/lb-web-service/#platform
+count: 1       # Number of tasks that should be running in your service.
+exec: true     # Enable running commands in your container.
+network:
+  connect: true # Enable Service Connect for intra-environment traffic between services.
+
+storage:
+  volumes:
+    reg-poc-server-data:
+      path: /usr/src/app/regps
+      read_only: false
+      efs: true
+
+variables:
+  ENABLE_CORS: "true"
+  VERIFIER_AUTHORIZATIONS: "http://vlei-verifier.test.reg-poc.local:7676/authorizations/"
+  VERIFIER_PRESENTATIONS: "http://vlei-verifier.test.reg-poc.local:7676/presentations/"
+  VERIFIER_REPORTS: "http://vlei-verifier.test.reg-poc.local:7676/reports/"
+  VERIFIER_REQUESTS: "http://vlei-verifier.test.reg-poc.local:7676/request/verify/"
