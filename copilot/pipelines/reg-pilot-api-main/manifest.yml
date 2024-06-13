@@ -24,7 +24,7 @@ source:
 stages:
   - # The name of the environment.
     name: test
-    require_approval: true
+    requires_approval: true
     # Optional: flag for manual approval action before deployment.
     # requires_approval: true
     # Optional: use test commands to validate this stage of your build.
