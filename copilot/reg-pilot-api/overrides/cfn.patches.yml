@@ -1,5 +1,0 @@
-- op: add
-  path: /Resources/AccessPoint/Properties/AccessPointTags
-  value:
-    - Key: Name
-      Value: !Sub '${AppName}-${WorkloadName}-${EnvName}'
