@@ -14,7 +14,7 @@ After you have built the project locally (ex python -m pip install -e .)
 In your terminal from the root project dir:
 
 ``` 
-gunicorn regps.app.service:app
+python src/regps/app/fastapi_app.py 
 ```
 
 #### Running in Docker:
@@ -23,8 +23,6 @@ docker-compose build --no-cache
 docker-compose down
 docker-compose up
 ```
-
-Requires a running [Redis](https://redis.io/) instance on the default port. 
 
 ### Webapp
 The web app (UI front-end) uses Signify/KERIA for selecting identifiers and credentials:
@@ -42,6 +40,6 @@ See: [vlei-verifier](https://github.com/GLEIF-IT/vlei-verifier)
 #### REST API
  You can run a test query using Swagger by going to:
  ```
- http://127.0.0.1:8000/api/doc#
+ http://127.0.0.1:8000/docs
  ```
 
