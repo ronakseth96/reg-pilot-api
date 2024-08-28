@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: ./images/reg-pilot-api.dockerfile
-    image: 2byrds/reg-pilot-api:latest
+    image: gleif/reg-pilot-api:dev
     ports:
       - 8000:8000
     # command: python src/regps/app/fastapi_app.py
@@ -25,14 +25,11 @@ services:
       timeout: 3s
       retries: 5
       start_period: 2s
-    # depends_on:
-      # - verifier
+#    depends_on:
+#       - vlei-verifier
 
   vlei-verifier:
-     build:
-       context: .
-       dockerfile: ./images/verifier.dockerfile
-     image: 2byrds/vlei-verifier:latest
+     image: gleif/vlei-verifier:dev
      container_name: vlei-verifier
      hostname: vlei-verifier
      # depends_on:
