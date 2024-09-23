@@ -23,7 +23,7 @@ class APIController:
 
     def login(self, said: str, vlei: str):
         verifier_response = self.verifier_adapter.verify_vlei_request(said, vlei)
-        if verifier_response.status_code != 200:
+        if verifier_response.status_code != 202:
             raise VerifierServiceException(
                 verifier_response.json(), verifier_response.status_code
             )
@@ -51,8 +51,8 @@ class APIController:
                 "Report digest verification failed", 400
             )
         verifier_response = self.verifier_adapter.upload_request(aid, dig, contype, raw)
-        if verifier_response.status_code != 200:
-            raise VerifierServiceException(
-                verifier_response.json(), verifier_response.status_code
-            )
+        # if verifier_response.status_code != 200:
+        #     raise VerifierServiceException(
+        #         verifier_response.json(), verifier_response.status_code
+        #     )
         return verifier_response
