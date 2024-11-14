@@ -46,11 +46,17 @@ class LoginRequest(BaseModel):
     said: str = Field(examples=login_examples["request"]["said"])
     vlei: str = Field(examples=login_examples["request"]["vlei"])
 
+class PresentRevocationRequest(BaseModel):
+    said: str = Field(examples=login_examples["request"]["said"])
+    vlei: str = Field(examples=login_examples["request"]["vlei"])
 
 class LoginResponse(BaseModel):
     aid: str = Field(examples=login_examples["response"]["aid"])
     said: str = Field(examples=login_examples["response"]["said"])
 
+class PresentRevocationResponse(BaseModel):
+    aid: str = Field(examples=login_examples["response"]["aid"])
+    said: str = Field(examples=login_examples["response"]["said"])
 
 class CheckLoginResponse(BaseModel):
     aid: str = Field(examples=check_login_examples["response"]["aid"])
