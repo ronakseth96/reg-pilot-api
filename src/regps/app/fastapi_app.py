@@ -121,28 +121,6 @@ async def present_revocation(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@app.post("/present_revocation", response_model=PresentRevocationResponse)
-async def present_revocation(response: Response, data: PresentRevocationRequest):
-    """
-    Given an AID and vLEI, returns information about the revocation
-    """
-    try:
-        logger.info(f"PresentRevocation: sending login cred {str(data)[:50]}...")
-        resp = api_controller.login(data.said, data.vlei)
-        return JSONResponse(status_code=202, content=resp)
-    except VerifierServiceException as e:
-        logger.error(f"PresentRevocation: Exception: {e}")
-        response.status_code = e.status_code
-        return JSONResponse(content=e.detail, status_code=e.status_code)
-    except HTTPException as e:
-        logger.error(f"PresentRevocation: Exception: {e}")
-        response.status_code = e.status_code
-        return JSONResponse(content=e.detail, status_code=e.status_code)
-    except Exception as e:
-        logger.error(f"PresentRevocation: Exception: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
 @app.get("/checklogin/{aid}", response_model=CheckLoginResponse)
 async def check_login_route(
         response: Response,
