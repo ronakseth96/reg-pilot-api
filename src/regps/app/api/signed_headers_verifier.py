@@ -21,11 +21,11 @@ class VerifySignedHeaders:
     def __init__(self, api_controller):
         self.api_controller = api_controller
 
-    def process_request(self, req: Request, raid):
+    def process_request(self, req: Request, raid, verify_for_upload=True):
         try:
             logger.info(f"Processing signed header verification request {req}")
             aid, cig, ser = self.handle_headers(req)
-            if aid == raid:
+            if not verify_for_upload or aid == raid:
                 res = self.api_controller.verify_cig(aid, cig, ser)
                 logger.info(f"VerifySignedHeaders.on_post: response {res}")
                 return res

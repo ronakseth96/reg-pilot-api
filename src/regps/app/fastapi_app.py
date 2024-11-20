@@ -64,11 +64,47 @@ async def login(response: Response, data: LoginRequest):
 
 
 @app.post("/present_revocation", response_model=PresentRevocationResponse)
-async def present_revocation(response: Response, data: PresentRevocationRequest):
+async def present_revocation(
+        request: Request,
+        response: Response,
+        data: PresentRevocationRequest,
+        signature: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature",
+                    "value": upload_examples["request"]["headers"]["signature"],
+                }
+            }
+        ),
+        signature_input: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature_input",
+                    "value": upload_examples["request"]["headers"]["signature_input"],
+                }
+            }
+        ),
+        signify_resource: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_resource",
+                    "value": upload_examples["request"]["headers"]["signify_resource"],
+                }
+            }
+        ),
+        signify_timestamp: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_timestamp",
+                    "value": upload_examples["request"]["headers"]["signify_timestamp"],
+                }
+            }
+        ), ):
     """
     Given an AID and vLEI, returns information about the revocation
     """
     try:
+        verify_signed_headers.process_request(request, None, False)
         logger.info(f"PresentRevocation: sending login cred {str(data)[:50]}...")
         resp = api_controller.login(data.said, data.vlei)
         return JSONResponse(status_code=202, content=resp)
@@ -87,17 +123,17 @@ async def present_revocation(response: Response, data: PresentRevocationRequest)
 
 @app.get("/checklogin/{aid}", response_model=CheckLoginResponse)
 async def check_login_route(
-    response: Response,
-    aid: str = Path(
-        ...,
-        description="AID",
-        openapi_examples={
-            "default": {
-                "summary": "Default AID",
-                "value": check_login_examples["request"]["aid"],
-            }
-        },
-    ),
+        response: Response,
+        aid: str = Path(
+            ...,
+            description="AID",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID",
+                    "value": check_login_examples["request"]["aid"],
+                }
+            },
+        ),
 ):
     """
     Given an AID returns information about the login
@@ -121,60 +157,60 @@ async def check_login_route(
 # TODO: Add upload form-data param to the required parameters and add it to the DOC
 @app.post("/upload/{aid}/{dig}", response_model=UploadResponse)
 async def upload_route(
-    request: Request,
-    response: Response,
-    aid: str = Path(
-        ...,
-        description="AID",
-        openapi_examples={
-            "default": {
-                "summary": "Default AID",
-                "value": upload_examples["request"]["aid"],
+        request: Request,
+        response: Response,
+        aid: str = Path(
+            ...,
+            description="AID",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID",
+                    "value": upload_examples["request"]["aid"],
+                }
+            },
+        ),
+        dig: str = Path(
+            ...,
+            description="DIG",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID",
+                    "value": upload_examples["request"]["dig"],
+                }
+            },
+        ),
+        signature: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature",
+                    "value": upload_examples["request"]["headers"]["signature"],
+                }
             }
-        },
-    ),
-    dig: str = Path(
-        ...,
-        description="DIG",
-        openapi_examples={
-            "default": {
-                "summary": "Default AID",
-                "value": upload_examples["request"]["dig"],
+        ),
+        signature_input: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature_input",
+                    "value": upload_examples["request"]["headers"]["signature_input"],
+                }
             }
-        },
-    ),
-    signature: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature",
-                "value": upload_examples["request"]["headers"]["signature"],
+        ),
+        signify_resource: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_resource",
+                    "value": upload_examples["request"]["headers"]["signify_resource"],
+                }
             }
-        }
-    ),
-    signature_input: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature_input",
-                "value": upload_examples["request"]["headers"]["signature_input"],
+        ),
+        signify_timestamp: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_timestamp",
+                    "value": upload_examples["request"]["headers"]["signify_timestamp"],
+                }
             }
-        }
-    ),
-    signify_resource: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_resource",
-                "value": upload_examples["request"]["headers"]["signify_resource"],
-            }
-        }
-    ),
-    signify_timestamp: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_timestamp",
-                "value": upload_examples["request"]["headers"]["signify_timestamp"],
-            }
-        }
-    ),
+        ),
 ):
     """
     Given an AID and DIG, returns information about the upload
