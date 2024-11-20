@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from regps.app.api.utils.swagger_examples import (
     login_examples,
     check_login_examples,
-    upload_examples,
+    upload_examples, revoke_examples,
 )
 
 
@@ -47,8 +47,8 @@ class LoginRequest(BaseModel):
     vlei: str = Field(examples=login_examples["request"]["vlei"])
 
 class PresentRevocationRequest(BaseModel):
-    said: str = Field(examples=login_examples["request"]["said"])
-    vlei: str = Field(examples=login_examples["request"]["vlei"])
+    said: str = Field(examples=revoke_examples["request"]["said"])
+    vlei: str = Field(examples=revoke_examples["request"]["vlei"])
 
 class LoginResponse(BaseModel):
     aid: str = Field(examples=login_examples["response"]["aid"])
