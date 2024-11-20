@@ -78,7 +78,7 @@ setup(
         "http_sfv>=0.9.8",
         "requests>=2.31.0",
         "swagger-ui-py>=22.7.13",
-        "keri>=1.1.11",
+        "keri==1.2.0-dev12",
         "fastapi>=0.111.1",
         "requests>=2.32.3",
         "python-multipart"
