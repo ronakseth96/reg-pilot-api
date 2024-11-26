@@ -67,7 +67,7 @@ class VerifierServiceAdapter:
         return res
 
     def add_root_of_trust_request(self, aid, vlei) -> requests.Response:
-        logger.info(f"Add root of trust request")
+        logger.info("Add root of trust request")
         logger.info(f"Posting to {self.add_rot_url}{aid}")
         res = requests.post(f"{self.add_rot_url}{aid}", headers={"Content-Type": "application/json+cesr"}, data=vlei)
         logger.info(f"Add root of trust response {json.dumps(res.json())}")
