@@ -106,7 +106,7 @@ async def present_revocation(
     """
     try:
         verify_signed_headers.process_request(request, None, False)
-        logger.info(f"PresentRevocation: sending revocation cred {str(data)[:50]}...")
+        logger.info(f"PresentRevocation: sending login cred {str(data)[:50]}...")
         resp = api_controller.login(data.said, data.vlei)
         return JSONResponse(status_code=202, content=resp)
     except VerifierServiceException as e:
