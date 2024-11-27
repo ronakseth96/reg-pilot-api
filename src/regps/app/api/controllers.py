@@ -29,6 +29,14 @@ class APIController:
             )
         return verifier_response.json()
 
+    def add_root_of_trust(self, aid, vlei):
+        verifier_response = self.verifier_adapter.add_root_of_trust_request(aid, vlei)
+        if verifier_response.status_code != 202:
+            raise VerifierServiceException(
+                verifier_response.json(), verifier_response.status_code
+            )
+        return verifier_response.json()
+
     def verify_cig(self, aid, cig, ser):
         verifier_response = self.verifier_adapter.verify_cig_request(aid, cig, ser)
         if verifier_response.status_code != 202:
