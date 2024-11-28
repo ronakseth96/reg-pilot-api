@@ -14,7 +14,7 @@ from regps.app.api.utils.pydantic_models import (
     LoginRequest,
     LoginResponse,
     CheckLoginResponse,
-    UploadResponse, PresentRevocationRequest, PresentRevocationResponse,
+    UploadResponse, PresentRevocationRequest, PresentRevocationResponse, AddRootOfTrustRequest, AddRootOfTrustResponse,
 )
 from regps.app.api.exceptions import (
     VerifierServiceException,
@@ -36,6 +36,7 @@ app = FastAPI(
 api_controller = APIController()
 verify_signed_headers = VerifySignedHeaders(api_controller)
 reports_db = ReportsDB()
+
 
 @app.get("/ping")
 async def ping():
@@ -118,6 +119,32 @@ async def present_revocation(
         return JSONResponse(content=e.detail, status_code=e.status_code)
     except Exception as e:
         logger.error(f"PresentRevocation: Exception: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/add_root_of_trust", response_model=AddRootOfTrustResponse)
+async def add_root_of_trust(
+        request: Request,
+        response: Response,
+        data: AddRootOfTrustRequest,
+):
+    """
+    Given a vLEI, adds the root of trust to the verifier
+    """
+    try:
+        logger.info(f"AddRootOfTrust: sending add root of trust request {str(data)[:50]}...")
+        resp = api_controller.add_root_of_trust(data.aid, data.vlei)
+        return JSONResponse(status_code=202, content=resp)
+    except VerifierServiceException as e:
+        logger.error(f"AddRootOfTrust: Exception: {e}")
+        response.status_code = e.status_code
+        return JSONResponse(content=e.detail, status_code=e.status_code)
+    except HTTPException as e:
+        logger.error(f"AddRootOfTrust: Exception: {e}")
+        response.status_code = e.status_code
+        return JSONResponse(content=e.detail, status_code=e.status_code)
+    except Exception as e:
+        logger.error(f"AddRootOfTrust: Exception: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -247,60 +274,60 @@ async def upload_route(
 
 @app.get("/upload/{aid}/{dig}")
 async def check_upload_route(
-    request: Request,
-    response: Response,
-    aid: str = Path(
-        ...,
-        description="AID",
-        openapi_examples={
-            "default": {
-                "summary": "Default AID",
-                "value": check_upload_examples["request"]["aid"],
+        request: Request,
+        response: Response,
+        aid: str = Path(
+            ...,
+            description="AID",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID",
+                    "value": check_upload_examples["request"]["aid"],
+                }
+            },
+        ),
+        dig: str = Path(
+            ...,
+            description="DIG",
+            openapi_examples={
+                "default": {
+                    "summary": "The file digest",
+                    "value": check_upload_examples["request"]["dig"],
+                }
+            },
+        ),
+        signature: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature",
+                    "value": upload_examples["request"]["headers"]["signature"],
+                }
             }
-        },
-    ),
-    dig: str = Path(
-        ...,
-        description="DIG",
-        openapi_examples={
-            "default": {
-                "summary": "The file digest",
-                "value": check_upload_examples["request"]["dig"],
+        ),
+        signature_input: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature_input",
+                    "value": upload_examples["request"]["headers"]["signature_input"],
+                }
             }
-        },
-    ),
-    signature: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature",
-                "value": upload_examples["request"]["headers"]["signature"],
+        ),
+        signify_resource: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_resource",
+                    "value": upload_examples["request"]["headers"]["signify_resource"],
+                }
             }
-        }
-    ),
-    signature_input: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature_input",
-                "value": upload_examples["request"]["headers"]["signature_input"],
+        ),
+        signify_timestamp: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_timestamp",
+                    "value": upload_examples["request"]["headers"]["signify_timestamp"],
+                }
             }
-        }
-    ),
-    signify_resource: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_resource",
-                "value": upload_examples["request"]["headers"]["signify_resource"],
-            }
-        }
-    ),
-    signify_timestamp: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_timestamp",
-                "value": upload_examples["request"]["headers"]["signify_timestamp"],
-            }
-        }
-    ),
+        ),
 ):
     """
     Check upload status by aid and dig.
@@ -326,50 +353,50 @@ async def check_upload_route(
 
 @app.get("/status/{aid}")
 async def status_route(
-    request: Request,
-    response: Response,
-    aid: str = Path(
-        ...,
-        description="AID",
-        openapi_examples={
-            "default": {
-                "summary": "Default AID",
-                "value": check_upload_examples["request"]["aid"],
+        request: Request,
+        response: Response,
+        aid: str = Path(
+            ...,
+            description="AID",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID",
+                    "value": check_upload_examples["request"]["aid"],
+                }
+            },
+        ),
+        signature: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature",
+                    "value": upload_examples["request"]["headers"]["signature"],
+                }
             }
-        },
-    ),
-    signature: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature",
-                "value": upload_examples["request"]["headers"]["signature"],
+        ),
+        signature_input: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature_input",
+                    "value": upload_examples["request"]["headers"]["signature_input"],
+                }
             }
-        }
-    ),
-    signature_input: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature_input",
-                "value": upload_examples["request"]["headers"]["signature_input"],
+        ),
+        signify_resource: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_resource",
+                    "value": upload_examples["request"]["headers"]["signify_resource"],
+                }
             }
-        }
-    ),
-    signify_resource: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_resource",
-                "value": upload_examples["request"]["headers"]["signify_resource"],
+        ),
+        signify_timestamp: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_timestamp",
+                    "value": upload_examples["request"]["headers"]["signify_timestamp"],
+                }
             }
-        }
-    ),
-    signify_timestamp: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_timestamp",
-                "value": upload_examples["request"]["headers"]["signify_timestamp"],
-            }
-        }
-    ),
+        ),
 ):
     """
     Check upload status by aid.
@@ -389,50 +416,50 @@ async def status_route(
 
 @app.get("/report/status/lei/{aid}")
 async def status_for_lei_route(
-    request: Request,
-    response: Response,
-    aid: str = Path(
-        ...,
-        description="AID",
-        openapi_examples={
-            "default": {
-                "summary": "Default AID. Must have logged into the verifier with a role credential specifying the LEI.",
-                "value": check_upload_examples["request"]["aid"],
+        request: Request,
+        response: Response,
+        aid: str = Path(
+            ...,
+            description="AID",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID. Must have logged into the verifier with a role credential specifying the LEI.",
+                    "value": check_upload_examples["request"]["aid"],
+                }
+            },
+        ),
+        signature: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature for signed headers.",
+                    "value": upload_examples["request"]["headers"]["signature"],
+                }
             }
-        },
-    ),
-    signature: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature for signed headers.",
-                "value": upload_examples["request"]["headers"]["signature"],
+        ),
+        signature_input: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature_input for signed headers.",
+                    "value": upload_examples["request"]["headers"]["signature_input"],
+                }
             }
-        }
-    ),
-    signature_input: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signature_input for signed headers.",
-                "value": upload_examples["request"]["headers"]["signature_input"],
+        ),
+        signify_resource: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_resource for signed headers.",
+                    "value": upload_examples["request"]["headers"]["signify_resource"],
+                }
             }
-        }
-    ),
-    signify_resource: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_resource for signed headers.",
-                "value": upload_examples["request"]["headers"]["signify_resource"],
+        ),
+        signify_timestamp: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_timestamp for signed headers.",
+                    "value": upload_examples["request"]["headers"]["signify_timestamp"],
+                }
             }
-        }
-    ),
-    signify_timestamp: str = Header(
-        openapi_examples={
-            "default": {
-                "summary": "Default signify_timestamp for signed headers.",
-                "value": upload_examples["request"]["headers"]["signify_timestamp"],
-            }
-        }
-    ),
+        ),
 ):
     """
     Check upload status by aid.
@@ -453,17 +480,17 @@ async def status_for_lei_route(
 # TODO: Remove this endpoint when we will have DB. IT's only for tests
 @app.post("/status/{aid}/drop")
 def clear_status_route(
-    request: Request,
-    aid: str = Path(
-        ...,
-        description="AID",
-        openapi_examples={
-            "default": {
-                "summary": "Default AID",
-                "value": check_upload_examples["request"]["aid"],
-            }
-        },
-    ),
+        request: Request,
+        aid: str = Path(
+            ...,
+            description="AID",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID",
+                    "value": check_upload_examples["request"]["aid"],
+                }
+            },
+        ),
 ):
     """
     Drop upload status for specified AID. For the test purposes

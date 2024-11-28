@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field
 from regps.app.api.utils.swagger_examples import (
     login_examples,
     check_login_examples,
-    upload_examples, revoke_examples,
+    upload_examples, revoke_examples, add_rot_examples,
 )
 
 
@@ -50,6 +50,10 @@ class PresentRevocationRequest(BaseModel):
     said: str = Field(examples=revoke_examples["request"]["said"])
     vlei: str = Field(examples=revoke_examples["request"]["vlei"])
 
+class AddRootOfTrustRequest(BaseModel):
+    aid: str = Field(examples=add_rot_examples["request"]["aid"])
+    vlei: str = Field(examples=add_rot_examples["request"]["vlei"])
+
 class LoginResponse(BaseModel):
     aid: str = Field(examples=login_examples["response"]["aid"])
     said: str = Field(examples=login_examples["response"]["said"])
@@ -57,6 +61,9 @@ class LoginResponse(BaseModel):
 class PresentRevocationResponse(BaseModel):
     aid: str = Field(examples=login_examples["response"]["aid"])
     said: str = Field(examples=login_examples["response"]["said"])
+
+class AddRootOfTrustResponse(BaseModel):
+    msg: bool = Field(examples=add_rot_examples["response"]["msg"])
 
 class CheckLoginResponse(BaseModel):
     aid: str = Field(examples=check_login_examples["response"]["aid"])
