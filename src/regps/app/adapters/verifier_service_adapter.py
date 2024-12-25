@@ -32,7 +32,7 @@ class VerifierServiceAdapter:
             "VERIFIER_REQUESTS", "http://localhost:7676/request/verify/"
         )
         self.add_rot_url = os.environ.get(
-            "VERIFIER_REQUESTS", "http://localhost:7676/root_of_trust/"
+            "VERIFIER_ADD_ROT", "http://localhost:7676/root_of_trust/"
         )
 
     def check_login_request(self, aid: str) -> requests.Response:
