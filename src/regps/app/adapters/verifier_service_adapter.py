@@ -32,7 +32,7 @@ class VerifierServiceAdapter:
             "VERIFIER_REQUESTS", "http://localhost:7676/request/verify/"
         )
         self.add_rot_url = os.environ.get(
-            "VERIFIER_REQUESTS", "http://localhost:7676/root_of_trust/"
+            "VERIFIER_ADD_ROT", "http://localhost:7676/root_of_trust/"
         )
 
     def check_login_request(self, aid: str) -> requests.Response:
@@ -66,10 +66,14 @@ class VerifierServiceAdapter:
         logger.info(f"Verify sig response {json.dumps(res.json())}")
         return res
 
-    def add_root_of_trust_request(self, aid, vlei) -> requests.Response:
+    def add_root_of_trust_request(self, aid, vlei, oobi) -> requests.Response:
         logger.info("Add root of trust request")
         logger.info(f"Posting to {self.add_rot_url}{aid}")
-        res = requests.post(f"{self.add_rot_url}{aid}", headers={"Content-Type": "application/json+cesr"}, data=vlei)
+        data = {
+            "vlei": vlei,
+            "oobi": oobi
+        }
+        res = requests.post(f"{self.add_rot_url}{aid}", headers={"Content-Type": "application/json"}, json=data)
         logger.info(f"Add root of trust response {json.dumps(res.json())}")
         return res
 
