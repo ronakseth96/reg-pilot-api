@@ -26,7 +26,7 @@ class VerifierServiceAdapter:
             "VERIFIER_PRESENTATIONS", "http://127.0.0.1:7676/presentations/"
         )
         self.reports_url = os.environ.get(
-            "VERIFIER_REPORTS", "http://127.0.0.1:7676/reports/"
+            "FILER_REPORTS", "http://127.0.0.1:7878/reports/"
         )
         self.request_url = os.environ.get(
             "VERIFIER_REQUESTS", "http://localhost:7676/request/verify/"
