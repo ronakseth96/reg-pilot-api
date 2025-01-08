@@ -7,6 +7,7 @@ from fastapi import (
     Request,
     Path,
     Response,
+    Query
 )
 from fastapi.responses import JSONResponse
 from starlette.middleware.cors import CORSMiddleware
@@ -337,6 +338,84 @@ async def check_upload_route(
         if not reports_db.authorized_to_check_status(aid, dig):
             raise HTTPException(status_code=401, detail=f"AID {aid} is not authorized to check status for digest {dig}")
         resp = api_controller.check_upload(aid, dig)
+        return JSONResponse(status_code=200, content=resp)
+    except VerifierServiceException as e:
+        logger.error(f"CheckUpload: Exception: {e}")
+        response.status_code = e.status_code
+        return JSONResponse(content=e.detail, status_code=e.status_code)
+    except HTTPException as e:
+        logger.error(f"CheckUpload: Exception: {e}")
+        response.status_code = e.status_code
+        return JSONResponse(content=e.detail, status_code=e.status_code)
+    except Exception as e:
+        logger.error(f"CheckUpload: Exception: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/admin/upload_statuses/{aid}")
+async def check_upload_route(
+        request: Request,
+        response: Response,
+        aid: str = Path(
+            ...,
+            description="AID",
+            openapi_examples={
+                "default": {
+                    "summary": "Default AID",
+                    "value": check_upload_examples["request"]["aid"],
+                }
+            },
+        ),
+        lei: str = Query(
+            "",
+            description="DIG",
+            openapi_examples={
+                "default": {
+                    "summary": "The file digest",
+                    "value": check_upload_examples["request"]["dig"],
+                }
+            },
+        ),
+        signature: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature",
+                    "value": upload_examples["request"]["headers"]["signature"],
+                }
+            }
+        ),
+        signature_input: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature_input",
+                    "value": upload_examples["request"]["headers"]["signature_input"],
+                }
+            }
+        ),
+        signify_resource: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_resource",
+                    "value": upload_examples["request"]["headers"]["signify_resource"],
+                }
+            }
+        ),
+        signify_timestamp: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_timestamp",
+                    "value": upload_examples["request"]["headers"]["signify_timestamp"],
+                }
+            }
+        ),
+
+):
+    """
+    Check upload status by aid and dig.
+    """
+    try:
+        verify_signed_headers.process_request(request, aid)
+        resp = api_controller.get_upload_statuses_admin(aid, lei)
         return JSONResponse(status_code=200, content=resp)
     except VerifierServiceException as e:
         logger.error(f"CheckUpload: Exception: {e}")

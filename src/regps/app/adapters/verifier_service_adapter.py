@@ -77,6 +77,27 @@ class VerifierServiceAdapter:
         logger.info(f"Add root of trust response {json.dumps(res.json())}")
         return res
 
+
+class FilerServiceAdapter:
+    def __init__(self):
+        self.reports_url = os.environ.get(
+            "FILER_REPORTS", "http://localhost:7878/reports/"
+        )
+        self.upload_statuses_admin_url = os.environ.get(
+            "FILER_ADMIN_UPLOAD_STATUSES", "http://localhost:7878/admin/upload_statuses/"
+        )
+
+
+    def upload_statuses_admin_request(self, aid: str, lei: str="") -> requests.Response:
+        logger.info(f"checking upload statuses by Data Admin: aid {aid} and dig {lei}")
+        logger.info(f"getting from {self.upload_statuses_admin_url}{aid}/{lei}")
+        res = requests.get(
+            f"{self.upload_statuses_admin_url}{aid}/{lei}",
+            headers={"Content-Type": "application/json"},
+        )
+        logger.info(f"upload statuses: {json.dumps(res.json())}")
+        return res
+
     def check_upload_request(self, aid: str, dig: str) -> requests.Response:
         logger.info(f"checking upload: aid {aid} and dig {dig}")
         logger.info(f"getting from {self.reports_url}{aid}/{dig}")
