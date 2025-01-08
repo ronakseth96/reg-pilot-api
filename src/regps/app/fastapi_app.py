@@ -353,7 +353,7 @@ async def check_upload_route(
 
 
 @app.get("/admin/upload_statuses/{aid}")
-async def check_upload_route(
+async def get_upload_statuses_admin(
         request: Request,
         response: Response,
         aid: str = Path(
