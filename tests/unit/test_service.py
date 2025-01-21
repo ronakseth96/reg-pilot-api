@@ -17,19 +17,19 @@ logger.setLevel(logging.DEBUG)
 def test_ends():
     # AID and SAID should be the same as what is in credential.cesr for the ECR credential
     # see https://trustoverip.github.io/tswg-acdc-specification/#top-level-fields to understand the fields/values
-    AID = "EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x"
-    SAID = "EElnd1DKvcDzzh7u7jBjsg2X9WgdQQuhgiu80i2VR-gk"
-    DIG = "EC7b6S50sY26HTj6AtQiWMDMucsBxMvThkmrKUBXVMf0"
+    AID = "EC3Rm0f9aQiZz2hxZOIup5Soyu6x_aA5996LP-eN6hBu"
+    SAID = "EHw8lEt5PmJZa-_eFdjxBNNUw4f8l3pT5lAZAQNc__SI"
+    DIG = "sha256-ba486c1a6249b804cdb0e163d84ed1309db776aded2ac4b5cb17f41929d3ca85"
 
     # got these from signify-ts integration test
     headers = {
         "HOST": "localhost:7676",
         "CONNECTION": "keep-alive",
         "METHOD": "POST",
-        "SIGNATURE": 'indexed="?0";signify="0BBbeeBw3lVmQWYBpcFH9KmRXZocrqLH_LZL4aqg5W9-NMdXqIYJ-Sao7colSTJOuYllMXFfggoMhkfpTKnvPhUF"',
-        "SIGNATURE-INPUT": 'signify=("@method" "@path" "signify-resource" "signify-timestamp");created=1714854033;keyid="BPoZo2b3r--lPBpURvEDyjyDkS65xBEpmpQhHQvrwlBE";alg="ed25519"',
-        "SIGNIFY-RESOURCE": "EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x",
-        "SIGNIFY-TIMESTAMP": "2024-05-04T20:20:33.730000+00:00",
+        "SIGNATURE": 'indexed="?0";signify="0BAo0wmWUJRG6a_-kmdeYWRhVdjifc9Dp7cEWxpFpLp4fUf114pb7Qec3r43uqGWfQdu33ci5PTDFgcIiDjsDPMI"',
+        "SIGNATURE-INPUT": 'signify=("@method" "@path" "signify-resource" "signify-timestamp");created=1737497943;keyid="BAIGwtGP4CFwVqXiU9bspN5_eoWpPfNh9qChkK6FtDAu";alg="ed25519"',
+        "SIGNIFY-RESOURCE": 'EC3Rm0f9aQiZz2hxZOIup5Soyu6x_aA5996LP-eN6hBu',
+        "SIGNIFY-TIMESTAMP": "2025-01-21T22:19:03.646000+00:00",
         "ACCEPT": "*/*",
         "ACCEPT-LANGUAGE": "*",
         "SEC-FETCH-MODE": "cors",
@@ -51,7 +51,6 @@ def test_ends():
             "/login", json={"said": SAID, "vlei": vlei_ecr}, headers=headers
         )
         assert result.status_code == 202
-
     result = client.get(f"/checklogin/{AID}", headers=headers)
     assert result.status_code == 200
     # assert result.text == '{"aid":"EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x","said":"EElnd1DKvcDzzh7u7jBjsg2X9WgdQQuhgiu80i2VR-gk","lei":"875500ELOZEL05BVXV37","msg":"AID EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x w/ lei 875500ELOZEL05BVXV37 has valid login account"}'

@@ -18,7 +18,7 @@ from regps.app.api.utils.pydantic_models import (
     UploadResponse, PresentRevocationRequest, PresentRevocationResponse, AddRootOfTrustRequest, AddRootOfTrustResponse,
 )
 from regps.app.api.exceptions import (
-    VerifierServiceException,
+    VerifierServiceException, VerifySignedHeadersException,
 )
 from regps.app.api.controllers import APIController
 from regps.app.api.utils.reports_db import ReportsDB
@@ -201,13 +201,13 @@ async def check_login_route(
     """
     try:
         logger.info(f"CheckLogin: sending aid {aid}")
-        verify_signed_headers.process_request(request, aid)
+        verify_signed_headers.process_request(request, aid, False)
         resp = api_controller.check_login(aid)
         lei = resp.get("lei")
         aid = resp.get("aid")
         reports_db.register_aid(aid, lei)
         return JSONResponse(status_code=200, content=resp)
-    except VerifierServiceException as e:
+    except (VerifierServiceException, VerifySignedHeadersException) as e:
         logger.error(f"CheckLogin: Exception: {e}")
         response.status_code = e.status_code
         return JSONResponse(content=e.detail, status_code=e.status_code)
