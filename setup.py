@@ -28,7 +28,7 @@ from setuptools import setup
 
 setup(
     name="reg-pilot-api",
-    version="0.0.2",  # also change in src/regps/__init__.py
+    version="0.0.3",  # also change in src/regps/__init__.py
     license="Apache Software License 2.0",
     description="RegPS: Regulation Portal Service API.",
     long_description="RegPS: A Regulation Portal Service to orchestate web app, vLEI validation, etc.",
@@ -95,7 +95,7 @@ setup(
     setup_requires=[],
     entry_points={
         "console_scripts": [
-            "regps = regps.app.cli.regps:main",
+            "reg-pilot-api = regps.app.cli.regps:main",
         ]
     },
 )

@@ -31,9 +31,14 @@ See: [reg-pilot-webapp](https://github.com/GLEIF-IT/reg-pilot-webapp)
 The verifier uses [keripy](https://github.com/WebOfTRust/keripy) for verifying the requests:
 See: [vlei-verifier](https://github.com/GLEIF-IT/vlei-verifier)
 
+### Filer
+Filer service for report uploads:
+See: [reg-pilot-filer](https://github.com/GLEIF-IT/reg-pilot-filer)
+
 ### Additional service
 * KERI Witness Network
 * vLEI Verifier
+* Reg Pilot Filer
 * KERI Agent
 
 #### REST API

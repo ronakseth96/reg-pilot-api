@@ -18,7 +18,7 @@ from regps.app.api.utils.pydantic_models import (
     UploadResponse, PresentRevocationRequest, PresentRevocationResponse, AddRootOfTrustRequest, AddRootOfTrustResponse,
 )
 from regps.app.api.exceptions import (
-    VerifierServiceException,
+    VerifierServiceException, VerifySignedHeadersException,
 )
 from regps.app.api.controllers import APIController
 from regps.app.api.utils.reports_db import ReportsDB
@@ -151,6 +151,7 @@ async def add_root_of_trust(
 
 @app.get("/checklogin/{aid}", response_model=CheckLoginResponse)
 async def check_login_route(
+        request: Request,
         response: Response,
         aid: str = Path(
             ...,
@@ -162,18 +163,51 @@ async def check_login_route(
                 }
             },
         ),
+        signature: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature",
+                    "value": upload_examples["request"]["headers"]["signature"],
+                }
+            }
+        ),
+        signature_input: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signature_input",
+                    "value": upload_examples["request"]["headers"]["signature_input"],
+                }
+            }
+        ),
+        signify_resource: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_resource",
+                    "value": upload_examples["request"]["headers"]["signify_resource"],
+                }
+            }
+        ),
+        signify_timestamp: str = Header(
+            openapi_examples={
+                "default": {
+                    "summary": "Default signify_timestamp",
+                    "value": upload_examples["request"]["headers"]["signify_timestamp"],
+                }
+            }
+        ),
 ):
     """
     Given an AID returns information about the login
     """
     try:
         logger.info(f"CheckLogin: sending aid {aid}")
+        verify_signed_headers.process_request(request, aid, False)
         resp = api_controller.check_login(aid)
         lei = resp.get("lei")
         aid = resp.get("aid")
         reports_db.register_aid(aid, lei)
         return JSONResponse(status_code=200, content=resp)
-    except VerifierServiceException as e:
+    except (VerifierServiceException, VerifySignedHeadersException) as e:
         logger.error(f"CheckLogin: Exception: {e}")
         response.status_code = e.status_code
         return JSONResponse(content=e.detail, status_code=e.status_code)
@@ -601,7 +635,7 @@ if os.getenv("ENABLE_CORS", "true").lower() in ("true", "1"):
 
 
 def main():
-    logger.info("Starting RegPS...")
+    logger.info("Starting Reg-Pilot-API")
     import uvicorn
 
     uvicorn.run(app, host="0.0.0.0", port=8000)

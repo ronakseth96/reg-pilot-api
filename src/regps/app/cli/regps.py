@@ -8,11 +8,13 @@ regps.app.cli.commands module
 import logging
 import multicommand
 import regps.app.fastapi_app as fastapi_app
-import commands
+from regps import __version__
+from regps.app.cli import commands
 
 
 def main():
     parser = multicommand.create_parser(commands)
+    parser.add_argument('--version', action='version', version=f"%(prog)s {__version__}")
     args = parser.parse_args()
 
     if not hasattr(args, "handler"):

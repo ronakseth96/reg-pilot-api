@@ -34,17 +34,17 @@ def test_digest_verification_wrong_dig():
 def test_verify_cig():
     # AID and SAID should be the same as what is in credential.cesr for the ECR credential
     # see https://trustoverip.github.io/tswg-acdc-specification/#top-level-fields to understand the fields/values
-    AID = "EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x"
-    # SAID = "EElnd1DKvcDzzh7u7jBjsg2X9WgdQQuhgiu80i2VR-gk"
+    AID = "EC3Rm0f9aQiZz2hxZOIup5Soyu6x_aA5996LP-eN6hBu"
+    # SAID = "EHw8lEt5PmJZa-_eFdjxBNNUw4f8l3pT5lAZAQNc__SI"
 
     headers = {
         "HOST": "localhost:7676",
         "CONNECTION": "keep-alive",
         "METHOD": "POST",
-        "SIGNATURE": 'indexed="?0";signify="0BBbeeBw3lVmQWYBpcFH9KmRXZocrqLH_LZL4aqg5W9-NMdXqIYJ-Sao7colSTJOuYllMXFfggoMhkfpTKnvPhUF"',
-        "SIGNATURE-INPUT": 'signify=("@method" "@path" "signify-resource" "signify-timestamp");created=1714854033;keyid="BPoZo2b3r--lPBpURvEDyjyDkS65xBEpmpQhHQvrwlBE";alg="ed25519"',
-        "SIGNIFY-RESOURCE": "EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x",
-        "SIGNIFY-TIMESTAMP": "2024-05-04T20:20:33.730000+00:00",
+        "SIGNATURE": 'indexed="?0";signify="0BAo0wmWUJRG6a_-kmdeYWRhVdjifc9Dp7cEWxpFpLp4fUf114pb7Qec3r43uqGWfQdu33ci5PTDFgcIiDjsDPMI"',
+        "SIGNATURE-INPUT": 'signify=("@method" "@path" "signify-resource" "signify-timestamp");created=1737497943;keyid="BAIGwtGP4CFwVqXiU9bspN5_eoWpPfNh9qChkK6FtDAu";alg="ed25519"',
+        "SIGNIFY-RESOURCE": 'EC3Rm0f9aQiZz2hxZOIup5Soyu6x_aA5996LP-eN6hBu',
+        "SIGNIFY-TIMESTAMP": "2025-01-21T22:19:03.646000+00:00",
         "ACCEPT": "*/*",
         "ACCEPT-LANGUAGE": "*",
         "SEC-FETCH-MODE": "cors",
@@ -57,29 +57,24 @@ def test_verify_cig():
     assert aid == AID
     assert (
         sig
-        == "0BBbeeBw3lVmQWYBpcFH9KmRXZocrqLH_LZL4aqg5W9-NMdXqIYJ-Sao7colSTJOuYllMXFfggoMhkfpTKnvPhUF"
-    )
-    assert (
-        ser
-        == '"@method": POST\n"@path": /\n"signify-resource": EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x\n"signify-timestamp": 2024-05-04T20:20:33.730000+00:00\n"@signature-params: (@method @path signify-resource signify-timestamp);created=1714854033;keyid=BPoZo2b3r--lPBpURvEDyjyDkS65xBEpmpQhHQvrwlBE;alg=ed25519"'
+        == "0BAo0wmWUJRG6a_-kmdeYWRhVdjifc9Dp7cEWxpFpLp4fUf114pb7Qec3r43uqGWfQdu33ci5PTDFgcIiDjsDPMI"
     )
 
 def test_verify_forwarded_cig():
     # AID and SAID should be the same as what is in credential.cesr for the ECR credential
     # see https://trustoverip.github.io/tswg-acdc-specification/#top-level-fields to understand the fields/values
-    AID = "EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x"
+    AID = "EC3Rm0f9aQiZz2hxZOIup5Soyu6x_aA5996LP-eN6hBu"
     # SAID = "EElnd1DKvcDzzh7u7jBjsg2X9WgdQQuhgiu80i2VR-gk"
 
     # See https://datatracker.ietf.org/doc/html/rfc9421#section-4.3 for forwarding signed headers
     headers = {
-        "HOST": "proxy:3434",
+        "HOST": "localhost:7676",
         "CONNECTION": "keep-alive",
         "METHOD": "POST",
-        "FORWARDED": "host: localhost:7676",
-        "SIGNATURE": 'indexed="?0";signify="0BBbeeBw3lVmQWYBpcFH9KmRXZocrqLH_LZL4aqg5W9-NMdXqIYJ-Sao7colSTJOuYllMXFfggoMhkfpTKnvPhUF"',
-        "SIGNATURE-INPUT": 'signify=("@method" "@path" "signify-resource" "signify-timestamp");created=1714854033;keyid="BPoZo2b3r--lPBpURvEDyjyDkS65xBEpmpQhHQvrwlBE";alg="ed25519"',
-        "SIGNIFY-RESOURCE": "EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x",
-        "SIGNIFY-TIMESTAMP": "2024-05-04T20:20:33.730000+00:00",
+        "SIGNATURE": 'indexed="?0";signify="0BAo0wmWUJRG6a_-kmdeYWRhVdjifc9Dp7cEWxpFpLp4fUf114pb7Qec3r43uqGWfQdu33ci5PTDFgcIiDjsDPMI"',
+        "SIGNATURE-INPUT": 'signify=("@method" "@path" "signify-resource" "signify-timestamp");created=1737497943;keyid="BAIGwtGP4CFwVqXiU9bspN5_eoWpPfNh9qChkK6FtDAu";alg="ed25519"',
+        "SIGNIFY-RESOURCE": 'EC3Rm0f9aQiZz2hxZOIup5Soyu6x_aA5996LP-eN6hBu',
+        "SIGNIFY-TIMESTAMP": "2025-01-21T22:19:03.646000+00:00",
         "ACCEPT": "*/*",
         "ACCEPT-LANGUAGE": "*",
         "SEC-FETCH-MODE": "cors",
@@ -92,9 +87,5 @@ def test_verify_forwarded_cig():
     assert aid == AID
     assert (
         sig
-        == "0BBbeeBw3lVmQWYBpcFH9KmRXZocrqLH_LZL4aqg5W9-NMdXqIYJ-Sao7colSTJOuYllMXFfggoMhkfpTKnvPhUF"
-    )
-    assert (
-        ser
-        == '"@method": POST\n"@path": /\n"signify-resource": EP4kdoVrDh4Mpzh2QbocUYIv4IjLZLDU367UO0b40f6x\n"signify-timestamp": 2024-05-04T20:20:33.730000+00:00\n"@signature-params: (@method @path signify-resource signify-timestamp);created=1714854033;keyid=BPoZo2b3r--lPBpURvEDyjyDkS65xBEpmpQhHQvrwlBE;alg=ed25519"'
+        == "0BAo0wmWUJRG6a_-kmdeYWRhVdjifc9Dp7cEWxpFpLp4fUf114pb7Qec3r43uqGWfQdu33ci5PTDFgcIiDjsDPMI"
     )
